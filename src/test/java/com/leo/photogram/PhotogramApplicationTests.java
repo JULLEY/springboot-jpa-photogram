@@ -1,10 +1,10 @@
-package com.cos.photogramstart;
+package com.leo.photogram;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
 
 @SpringBootTest
-class PhotogramStartApplicationTests {
+class PhotogramApplicationTests {
 
 	@Test
 	void contextLoads() {
