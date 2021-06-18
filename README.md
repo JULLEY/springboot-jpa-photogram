@@ -37,8 +37,8 @@
 ### 데이터베이스
 
 ```sql
-create user 'cos'@'%' identified by 'cos1234';
-GRANT ALL PRIVILEGES ON *.* TO 'cos'@'%';
+create user 'leo'@'%' identified by '1234';
+GRANT ALL PRIVILEGES ON *.* TO 'leo'@'%';
 create database photogram;
 ```
 
@@ -46,7 +46,7 @@ create database photogram;
 
 ```yml
 server:
-  port: 8080
+  port: 8090
   servlet:
     context-path: /
     encoding:
@@ -61,9 +61,9 @@ spring:
       
   datasource:
     driver-class-name: org.mariadb.jdbc.Driver
-    url: jdbc:mariadb://localhost:3306/costa?serverTimezone=Asia/Seoul
-    username: costa
-    password: costa1234
+    url: jdbc:mariadb://localhost:3306/leo?serverTimezone=Asia/Seoul
+    username: leo
+    password: 1234
     
   jpa:
     open-in-view: true
