@@ -1,0 +1,31 @@
+package com.leo.photogram.service;
+
+import com.leo.photogram.domain.user.User;
+import com.leo.photogram.domain.user.UserRepository;
+import lombok.RequiredArgsConstructor;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.stereotype.Service;
+
+import javax.transaction.Transactional;
+
+@RequiredArgsConstructor
+@Service
+public class AuthService {
+
+    private final UserRepository userRepository;
+    private final BCryptPasswordEncoder bCryptPasswordEncoder;
+
+    /**
+     * 회원가입
+     * @param user
+     */
+    @Transactional
+    public User signUp(User user){
+        String rawPassword = user.getPassword();
+        String encPassword = bCryptPasswordEncoder.encode(rawPassword);
+        user.setPassword(encPassword);
+        user.setRole("ROLE_USER");
+        User res = userRepository.save(user);
+        return res;
+    }
+}

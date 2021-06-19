@@ -3,12 +3,14 @@ package com.leo.photogram.domain.user;
 // JPA - Java Persistance API (자바로 데이터를 영구적으로 저장할 수 있는 API를 제공)
 
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
 
+@Builder
 @AllArgsConstructor
 @NoArgsConstructor
 @Data
@@ -19,7 +21,9 @@ public class User {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
 
+    @Column(unique = true)
     private String username;
+
     private String password;
     private String name;
     private String website;
