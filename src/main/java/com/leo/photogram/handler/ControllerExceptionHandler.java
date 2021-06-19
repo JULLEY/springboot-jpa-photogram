@@ -1,5 +1,6 @@
 package com.leo.photogram.handler;
 
+import com.leo.photogram.handler.ex.CustomApiException;
 import com.leo.photogram.handler.ex.CustomValidationApiException;
 import com.leo.photogram.handler.ex.CustomValidationException;
 import com.leo.photogram.util.Script;
@@ -25,5 +26,10 @@ public class ControllerExceptionHandler {
     @ExceptionHandler(CustomValidationApiException.class)
     public ResponseEntity<?> validationApiException(CustomValidationApiException e){
         return new ResponseEntity<>(new CommRespDto<>(9999, e.getMessage(), e.getErrorMap()), HttpStatus.BAD_REQUEST);
+    }
+    // Ajax통신용
+    @ExceptionHandler(CustomApiException.class)
+    public ResponseEntity<?> apiException(CustomApiException e){
+        return new ResponseEntity<>(new CommRespDto<>(9999, e.getMessage(), null), HttpStatus.BAD_REQUEST);
     }
 }
