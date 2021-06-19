@@ -1,6 +1,7 @@
 package com.leo.photogram.web;
 
 import com.leo.photogram.domain.user.User;
+import com.leo.photogram.handler.ex.CustomValidationException;
 import com.leo.photogram.service.AuthService;
 import com.leo.photogram.web.dto.auth.SignupDto;
 import lombok.RequiredArgsConstructor;
@@ -38,20 +39,20 @@ public class AuthController {
 
     @PostMapping("/auth/signup")
     public String signup(@Valid SignupDto signupDto, BindingResult bindingResult){
-//
-//        if(bindingResult.hasErrors()){
-//            Map<String, Object> errorMap = new HashMap<>();
-//
-//            for(FieldError error : bindingResult.getFieldErrors()){
-//                errorMap.put(error.getField(), error.getDefaultMessage());
-//                System.out.println("error > " + error.getDefaultMessage());
-//            }
-//        }
 
-        log.info(signupDto.toString());
-        User user = signupDto.toEntity();
-        User res = authService.signUp(user);
-        log.info("회원가입결과 > " + res.toString());
-        return "auth/signin";
+        if(bindingResult.hasErrors()){
+            Map<String, Object> errorMap = new HashMap<>();
+
+            for(FieldError error : bindingResult.getFieldErrors()){
+                errorMap.put(error.getField(), error.getDefaultMessage());
+            }
+            throw new CustomValidationException("유효성 검사 실패", errorMap);
+        }else{
+            log.info(signupDto.toString());
+            User user = signupDto.toEntity();
+            User res = authService.signUp(user);
+            log.info("회원가입결과 > " + res.toString());
+            return "auth/signin";
+        }
     }
 }
