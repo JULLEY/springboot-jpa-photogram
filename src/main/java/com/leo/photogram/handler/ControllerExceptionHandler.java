@@ -1,10 +1,12 @@
 package com.leo.photogram.handler;
 
 import com.leo.photogram.handler.ex.CustomApiException;
+import com.leo.photogram.handler.ex.CustomException;
 import com.leo.photogram.handler.ex.CustomValidationApiException;
 import com.leo.photogram.handler.ex.CustomValidationException;
 import com.leo.photogram.util.Script;
 import com.leo.photogram.web.dto.CommRespDto;
+import com.nimbusds.oauth2.sdk.util.MapUtils;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ControllerAdvice;
@@ -19,7 +21,16 @@ public class ControllerExceptionHandler {
     // script 반환
     @ExceptionHandler(CustomValidationException.class)
     public String validationException(CustomValidationException e) {
-        return Script.goBack(e.getErrorMap().toString());
+        if(MapUtils.isEmpty(e.getErrorMap())){
+            return Script.goBack(e.getMessage());
+        }else{
+            return Script.goBack(e.getErrorMap().toString());
+        }
+    }
+
+    @ExceptionHandler(CustomException.class)
+    public String exception(CustomException e) {
+        return Script.goBack(e.getMessage());
     }
 
     // Ajax통신용

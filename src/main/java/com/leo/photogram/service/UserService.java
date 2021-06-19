@@ -2,13 +2,13 @@ package com.leo.photogram.service;
 
 import com.leo.photogram.domain.user.User;
 import com.leo.photogram.domain.user.UserRepository;
+import com.leo.photogram.handler.ex.CustomException;
 import com.leo.photogram.handler.ex.CustomValidationApiException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
-import java.util.function.Supplier;
 
 @RequiredArgsConstructor
 @Service
@@ -16,6 +16,14 @@ public class UserService {
 
     private final UserRepository userRepository;
     private final BCryptPasswordEncoder bCryptPasswordEncoder;
+
+    public User userProfile(int userId){
+        User userEntity = userRepository.findById(userId).orElseThrow(()->{
+            throw new CustomException("존재하지 않는 페이지입니다.");
+        });
+        userEntity.getImages();
+        return userEntity;
+    }
 
     @Transactional
     public User updateUserInfo(int id, User user){
@@ -35,4 +43,5 @@ public class UserService {
 
         return userEntity;
     }
+
 }

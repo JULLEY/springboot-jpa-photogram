@@ -50,8 +50,8 @@ public class AuthController {
         }else{
             log.info(signupDto.toString());
             User user = signupDto.toEntity();
-            User res = authService.signUp(user);
-            log.info("회원가입결과 > " + res.toString());
+            User userEntity = authService.signUp(user);
+            log.info("회원가입결과 > " + userEntity.toString());
             return "auth/signin";
         }
     }
