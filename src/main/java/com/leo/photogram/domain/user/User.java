@@ -2,6 +2,7 @@ package com.leo.photogram.domain.user;
 
 // JPA - Java Persistance API (자바로 데이터를 영구적으로 저장할 수 있는 API를 제공)
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.leo.photogram.domain.image.Image;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -49,6 +50,7 @@ public class User {
     // FetchType.LAZY는 User를 select 할 때 해당 User에 등록된 image를 가져오지 말라는 의미. - 대신 getImages() 함수가 호출될 때 가져오라는 의미.
     // FetchType.EAGER는 User를 select 할 때 해당 User에 등록된 image를 전부 JOIN해서 가져오라는 의미.
     @OneToMany(mappedBy = "user", fetch = FetchType.LAZY)
+    @JsonIgnoreProperties({"user"}) // Image안에있는 user를 ignore시킴
     private List<Image> images;
 
     private LocalDateTime createDate;
