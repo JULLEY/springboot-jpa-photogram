@@ -8,6 +8,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
+import javax.transaction.Transactional;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -22,6 +23,7 @@ public class ImageService {
     @Value("${file.path}")
     private String uploadFolder;
 
+    @Transactional
     public void uploadImage(ImageUploadDto imageUploadDto, PrincipalDetails principalDetails){
         UUID uuid = UUID.randomUUID();
         String imageFileName = uuid + "_" + imageUploadDto.getFile().getOriginalFilename();
