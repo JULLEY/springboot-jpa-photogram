@@ -12,6 +12,6 @@ import lombok.NoArgsConstructor;
 @Data
 public class UserProfileDto {
 
-    private int isPageOwer;
+    private boolean isPageOwer;
     private User user;
 }

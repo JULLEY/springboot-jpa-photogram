@@ -26,7 +26,7 @@
 		<!--유저정보 및 사진등록 구독하기-->
 		<div class="profile-right">
 			<div class="name-group">
-				<h2>${user.name}</h2>
+				<h2>${user.user.name}</h2>
 
 				<button class="cta" onclick="location.href='/image/upload'">사진등록</button>
 				<button class="cta" onclick="toggleSubscribe(this)">구독하기</button>

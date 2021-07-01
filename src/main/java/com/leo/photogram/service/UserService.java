@@ -4,6 +4,8 @@ import com.leo.photogram.domain.user.User;
 import com.leo.photogram.domain.user.UserRepository;
 import com.leo.photogram.handler.ex.CustomException;
 import com.leo.photogram.handler.ex.CustomValidationApiException;
+import com.leo.photogram.web.dto.user.UserProfileDto;
+import com.nimbusds.jose.util.IntegerUtils;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -17,12 +19,20 @@ public class UserService {
     private final UserRepository userRepository;
     private final BCryptPasswordEncoder bCryptPasswordEncoder;
 
-    public User userProfile(int userId){
-        User userEntity = userRepository.findById(userId).orElseThrow(()->{
+    public UserProfileDto userProfile(int pageUserId, int principalId){
+
+        UserProfileDto userProfileDto = new UserProfileDto();
+
+
+        User userEntity = userRepository.findById(pageUserId).orElseThrow(()->{
             throw new CustomException("존재하지 않는 페이지입니다.");
         });
-        userEntity.getImages();
-        return userEntity;
+
+        userProfileDto.setUser(userEntity);
+        userProfileDto.setPageOwer(pageUserId == principalId ? Boolean.TRUE : Boolean.FALSE);    // true 주인 , false 주인 아님
+
+//        userEntity.getImages();
+        return userProfileDto;
     }
 
     @Transactional

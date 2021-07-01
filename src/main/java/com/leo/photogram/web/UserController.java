@@ -3,6 +3,7 @@ package com.leo.photogram.web;
 import com.leo.photogram.config.auth.PrincipalDetails;
 import com.leo.photogram.domain.user.User;
 import com.leo.photogram.service.UserService;
+import com.leo.photogram.web.dto.user.UserProfileDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
@@ -16,10 +17,10 @@ public class UserController {
 
     private final UserService userService;
 
-    @GetMapping("/user/{id}")
-    public String profile(@PathVariable int id, Model model){
-        User userEntity = userService.userProfile(id);
-        model.addAttribute("user", userEntity);
+    @GetMapping("/user/{pageUserId}")
+    public String profile(@PathVariable int pageUserId, Model model, @AuthenticationPrincipal PrincipalDetails principalDetails){
+        UserProfileDto userProfileDto = userService.userProfile(pageUserId, principalDetails.getUser().getId());
+        model.addAttribute("user", userProfileDto);
         return "user/profile";
     }
 
