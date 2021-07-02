@@ -9,6 +9,7 @@ import com.nimbusds.jose.util.IntegerUtils;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.util.ObjectUtils;
 
 import javax.transaction.Transactional;
 
@@ -29,7 +30,8 @@ public class UserService {
         });
 
         userProfileDto.setUser(userEntity);
-        userProfileDto.setPageOwer(pageUserId == principalId ? Boolean.TRUE : Boolean.FALSE);    // true 주인 , false 주인 아님
+        userProfileDto.setPageOwnerState(pageUserId == principalId);    // true 주인 , false 주인 아님
+        userProfileDto.setImageCount(userEntity.getImages().size());
 
 //        userEntity.getImages();
         return userProfileDto;

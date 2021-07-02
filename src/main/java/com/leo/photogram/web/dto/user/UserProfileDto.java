@@ -12,6 +12,7 @@ import lombok.NoArgsConstructor;
 @Data
 public class UserProfileDto {
 
-    private boolean isPageOwer;
+    private boolean pageOwnerState;
+    private int imageCount;
     private User user;
 }

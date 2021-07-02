@@ -26,10 +26,16 @@
 		<!--유저정보 및 사진등록 구독하기-->
 		<div class="profile-right">
 			<div class="name-group">
-				<h2>${user.user.name}</h2>
+				<h2>${userInfo.user.name}</h2>
 
-				<button class="cta" onclick="location.href='/image/upload'">사진등록</button>
-				<button class="cta" onclick="toggleSubscribe(this)">구독하기</button>
+				<c:choose>
+					<c:when test="${userInfo.pageOwnerState}">
+						<button class="cta" onclick="location.href='/image/upload'">사진등록</button>
+					</c:when>
+					<c:otherwise>
+						<button class="cta" onclick="toggleSubscribe(this)">구독하기</button>
+					</c:otherwise>
+				</c:choose>
 				<button class="modi" onclick="popup('.modal-info')">
 					<i class="fas fa-cog"></i>
 				</button>
@@ -37,15 +43,15 @@
 
 			<div class="subscribe">
 				<ul>
-					<li><a href=""> 게시물<span>${user.images.size()}</span>
+					<li><a href=""> 게시물<span>${userInfo.imageCount}</span>
 					</a></li>
 					<li><a href="javascript:subscribeInfoModalOpen();"> 구독정보<span>2</span>
 					</a></li>
 				</ul>
 			</div>
 			<div class="state">
-				<h4>${user.bio}</h4>
-				<h4>${user.website}</h4>
+				<h4>${userInfo.user.bio}</h4>
+				<h4>${userInfo.user.website}</h4>
 			</div>
 		</div>
 		<!--유저정보 및 사진등록 구독하기-->
@@ -61,7 +67,7 @@
 		<div id="tab-1-content" class="tab-content-item show">
 			<!--게시물컨 그리드배열-->
 			<div class="tab-1-content-inner">
-				<c:forEach items="${user.images}" var="image">
+				<c:forEach items="${userInfo.user.images}" var="image">
 					<div class="img-box">
 						<a href="javascript:"> <img src="/upload/${image.postImageUrl}" />
 						</a>
