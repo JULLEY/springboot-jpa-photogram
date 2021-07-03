@@ -25,14 +25,19 @@ public class SubscribeService {
 
         StringBuffer sb = new StringBuffer();
 
-        sb.append("SELECT u.id ,u.username,u.profileImageUrl, ");
-        sb.append("IF((SELECT 1 FROM subscribe WHERE fromUserId = ? AND toUserId = u.id), 1, 0) subscribeState, ");
-        sb.append("IF((?=u.id), 1,0) equalUserState ");
-        sb.append("FROM user u ");
-        sb.append("INNER JOIN subscribe s ON u.id = s.toUserId ");
-        sb.append("WHERE s.fromUserId = ? ");
+        sb.append("SELECT u.id, u.username, u.profileImageUrl, ");
+        sb.append("if ((SELECT 1 FROM subscribe WHERE fromUserId = ? AND toUserId = u.id), 1, 0) subscribeState, ");
+        sb.append("if ((?=u.id), 1, 0) equalUserState ");
+        sb.append("FROM user u INNER JOIN subscribe s ");
+        sb.append("ON u.id = s.toUserId ");
+        sb.append("WHERE s.fromUserId = ?"); // 세미콜론 첨부하면 안됨
 
-        Query query = em.createQuery(sb.toString())
+        // 1.물음표 principalId
+        // 2.물음표 principalId
+        // 3.물음표 pageUserId
+
+        // 쿼리 완성
+        Query query = em.createNativeQuery(sb.toString())
                 .setParameter(1, principalId)
                 .setParameter(2, principalId)
                 .setParameter(3, pageUserId);
