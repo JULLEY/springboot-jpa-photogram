@@ -43,12 +43,18 @@ function getStoryItem(v) {
 					<div class="sl__item__contents">
 						<div class="sl__item__contents__icon">
 				
-							<button>
-								<i class="fas fa-heart active" id="storyLikeIcon-1" onclick="toggleLike()"></i>
-							</button>
+							<button>`;
+
+								if(v.likeState){
+									item += `<i class="fas fa-heart active" id="storyLikeIcon-${v.id}" onClick="toggleLike(${v.id})"></i>`;
+								}else{
+									item += `<i class="far fa-heart" id="storyLikeIcon-${v.id}" onclick="toggleLike(${v.id})"></i>`;
+								}
+
+					item +=`</button>
 						</div>
 				
-						<span class="like"><b id="storyLikeCount-1">3 </b>likes</span>
+						<span class="like"><b id="storyLikeCount-${v.id}">${v.likeCount} </b>likes</span>
 				
 						<div class="sl__item__contents__content">
 							<p>${v.caption}</p>
@@ -76,11 +82,9 @@ function getStoryItem(v) {
 
 // (2) 스토리 스크롤 페이징하기
 $(window).scroll(() => {
-	console.log("스크롤 감지");
+	let checkNum = $(window).scrollTop() - ($(document).height() - $(window).height());
 
-	let checkNum = $(window).scrollTop() - ( $(document).height() - $(window).height() );
-
-	if(checkNum < 1 && checkNum > -1){
+	if(checkNum < 10 && checkNum > -10){
 		page++;
 		storyLoad();
 	}
@@ -88,16 +92,44 @@ $(window).scroll(() => {
 
 
 // (3) 좋아요, 안좋아요
-function toggleLike() {
-	let likeIcon = $("#storyLikeIcon-1");
+function toggleLike(imageId) {
+	let likeIcon = $(`#storyLikeIcon-${imageId}`);
 	if (likeIcon.hasClass("far")) {
-		likeIcon.addClass("fas");
-		likeIcon.addClass("active");
-		likeIcon.removeClass("far");
+
+		$.ajax({
+			type: "post",
+			url: `/api/image/${imageId}/likes`,
+			datatType: "json"
+		}).done(res=>{
+
+			let likeCountStr = $(`#storyLikeCount-${imageId}`).text();
+			let likeCount = Number(likeCountStr) + 1;
+			$(`#storyLikeCount-${imageId}`).text(likeCount);
+
+			likeIcon.addClass("fas");
+			likeIcon.addClass("active");
+			likeIcon.removeClass("far");
+		}).fail(error=>{
+			console.log("좋아요 실패", error);
+		})
+
 	} else {
-		likeIcon.removeClass("fas");
-		likeIcon.removeClass("active");
-		likeIcon.addClass("far");
+		$.ajax({
+			type: "delete",
+			url: `/api/image/${imageId}/likes`,
+			datatType: "json"
+		}).done(res=>{
+			let likeCountStr = $(`#storyLikeCount-${imageId}`).text();
+			let likeCount = Number(likeCountStr) - 1;
+			$(`#storyLikeCount-${imageId}`).text(likeCount);
+
+			likeIcon.removeClass("fas");
+			likeIcon.removeClass("active");
+			likeIcon.addClass("far");
+		}).fail(error=>{
+			console.log("싫어요 실패", error);
+		})
+
 	}
 }
 
