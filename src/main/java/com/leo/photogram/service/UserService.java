@@ -1,5 +1,6 @@
 package com.leo.photogram.service;
 
+import com.leo.photogram.domain.subscribe.SubscribeRepository;
 import com.leo.photogram.domain.user.User;
 import com.leo.photogram.domain.user.UserRepository;
 import com.leo.photogram.handler.ex.CustomException;
@@ -18,6 +19,7 @@ import javax.transaction.Transactional;
 public class UserService {
 
     private final UserRepository userRepository;
+    private final SubscribeRepository subscribeRepository;
     private final BCryptPasswordEncoder bCryptPasswordEncoder;
 
     public UserProfileDto userProfile(int pageUserId, int principalId){
@@ -32,6 +34,12 @@ public class UserService {
         userProfileDto.setUser(userEntity);
         userProfileDto.setPageOwnerState(pageUserId == principalId);    // true 주인 , false 주인 아님
         userProfileDto.setImageCount(userEntity.getImages().size());
+
+        int subscribeState = subscribeRepository.mSubscribeState(principalId, pageUserId);
+        int subscribeCount = subscribeRepository.mSubscribeCount(pageUserId);
+
+        userProfileDto.setSubscribeState(subscribeState == 1);
+        userProfileDto.setSubscribeCount(subscribeCount);
 
 //        userEntity.getImages();
         return userProfileDto;
