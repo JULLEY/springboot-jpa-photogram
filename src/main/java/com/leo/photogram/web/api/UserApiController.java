@@ -4,19 +4,25 @@ import com.leo.photogram.config.auth.PrincipalDetails;
 import com.leo.photogram.domain.user.User;
 import com.leo.photogram.handler.ex.CustomValidationApiException;
 import com.leo.photogram.handler.ex.CustomValidationException;
+import com.leo.photogram.service.SubscribeService;
 import com.leo.photogram.service.UserService;
+import com.leo.photogram.web.SubscribeDto;
 import com.leo.photogram.web.dto.CommRespDto;
 import com.leo.photogram.web.dto.user.UserUpdateDto;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.FieldError;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.validation.Valid;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 @RequiredArgsConstructor
@@ -24,6 +30,15 @@ import java.util.Map;
 public class UserApiController {
 
     private final UserService userService;
+    private final SubscribeService subscribeService;
+
+    @GetMapping("/api/user/{pageUserId}/subscribe")
+    public ResponseEntity<?> subscribeList(@PathVariable int pageUserId, @AuthenticationPrincipal PrincipalDetails principalDetails){
+
+        List<SubscribeDto> subscribeList = subscribeService.subscribeList(principalDetails.getUser().getId(), pageUserId);
+
+        return new ResponseEntity<>(new CommRespDto<>(1, "구독자 정보 불러오기 성공", subscribeList), HttpStatus.OK);
+    }
 
     @PutMapping("/api/user/{id}")
     public CommRespDto<?> update(
