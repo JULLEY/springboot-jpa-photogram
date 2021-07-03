@@ -79,7 +79,7 @@
 						<a href="javascript:"> <img src="/upload/${image.postImageUrl}" />
 						</a>
 						<div class="comment">
-							<a href="javascript:" class=""> <i class="fas fa-heart"></i><span>0</span>
+							<a href="javascript:" class=""> <i class="fas fa-heart"></i><span>${image.likeCount}</span>
 							</a>
 						</div>
 					</div>
