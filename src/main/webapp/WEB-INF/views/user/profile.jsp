@@ -120,11 +120,7 @@
 				<i class="fas fa-times"></i>
 			</button>
 		</div>
-
 		<div class="subscribe-list" id="subscribeModalList">
-
-
-
 		</div>
 	</div>
 

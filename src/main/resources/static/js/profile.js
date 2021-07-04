@@ -98,7 +98,6 @@ function profileImageUpload(pageUserId, principalId) {
 		// 서버에 이미지 전송
 		let profileImageForm = $("#userProfileImageForm")[0];
 
-		console.log(profileImageForm);
 		// FormData 객체를 이용하여 form 태그의 필드와 그 값을 key/value형태로 생성
 		let formData = new FormData(profileImageForm);
 
