@@ -6,13 +6,18 @@ import com.leo.photogram.domain.user.UserRepository;
 import com.leo.photogram.handler.ex.CustomException;
 import com.leo.photogram.handler.ex.CustomValidationApiException;
 import com.leo.photogram.web.dto.user.UserProfileDto;
-import com.nimbusds.jose.util.IntegerUtils;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
-import org.springframework.util.ObjectUtils;
+import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.multipart.MultipartFile;
 
-import javax.transaction.Transactional;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.util.UUID;
+
 
 @RequiredArgsConstructor
 @Service
@@ -22,6 +27,32 @@ public class UserService {
     private final SubscribeRepository subscribeRepository;
     private final BCryptPasswordEncoder bCryptPasswordEncoder;
 
+    @Value("${file.path}")
+    private String uploadFolder;
+
+    @Transactional
+    public User updateProfileImage(int principalId, MultipartFile profileImageFile){
+        UUID uuid = UUID.randomUUID();
+        String imageFileName = uuid + "_" + profileImageFile.getOriginalFilename();
+        System.out.println("image filename > " + imageFileName);
+
+        Path imageFilePath = Paths.get(uploadFolder + imageFileName);
+
+        try{
+            Files.write(imageFilePath, profileImageFile.getBytes());
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+
+        User userEntity = userRepository.findById(principalId).orElseThrow(()->{
+           throw new CustomValidationApiException("유저를 찾을 수 없습니다.");
+        });
+        userEntity.setProfileImageUrl(imageFileName);
+
+        return userEntity;
+    }
+
+    @Transactional(readOnly = true)
     public UserProfileDto userProfile(int pageUserId, int principalId){
 
         UserProfileDto userProfileDto = new UserProfileDto();

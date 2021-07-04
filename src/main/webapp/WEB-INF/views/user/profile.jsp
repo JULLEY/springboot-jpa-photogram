@@ -17,7 +17,7 @@
 						id="userProfileImageInput" />
 				</form>
 
-				<img class="profile-image" src="#"
+				<img class="profile-image" src="/upload/${userInfo.user.profileImageUrl}"
 					onerror="this.src='/images/person.jpeg'" id="userProfileImage" />
 			</div>
 		</div>
@@ -100,13 +100,15 @@
 <!--로그아웃, 회원정보변경 모달 end-->
 
 <!--프로필사진 바꾸기 모달-->
-<div class="modal-image" onclick="modalImage()">
-	<div class="modal">
-		<p>프로필 사진 바꾸기</p>
-		<button onclick="profileImageUpload()">사진 업로드</button>
-		<button onclick="closePopup('.modal-image')">취소</button>
+<c:if test="${userInfo.user.id eq principal.user.id}">
+	<div class="modal-image" onclick="modalImage()">
+		<div class="modal">
+			<p>프로필 사진 바꾸기</p>
+			<button onclick="profileImageUpload(${userInfo.user.id}, ${principal.user.id})">사진 업로드</button>
+			<button onclick="closePopup('.modal-image')">취소</button>
+		</div>
 	</div>
-</div>
+</c:if>
 
 <!--프로필사진 바꾸기 모달end-->
 
