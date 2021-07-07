@@ -32,10 +32,6 @@ public class SubscribeService {
         sb.append("ON u.id = s.toUserId ");
         sb.append("WHERE s.fromUserId = ?"); // 세미콜론 첨부하면 안됨
 
-        // 1.물음표 principalId
-        // 2.물음표 principalId
-        // 3.물음표 pageUserId
-
         // 쿼리 완성
         Query query = em.createNativeQuery(sb.toString())
                 .setParameter(1, principalId)
