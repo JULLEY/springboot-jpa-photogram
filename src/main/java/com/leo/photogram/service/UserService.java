@@ -34,7 +34,6 @@ public class UserService {
     public User updateProfileImage(int principalId, MultipartFile profileImageFile){
         UUID uuid = UUID.randomUUID();
         String imageFileName = uuid + "_" + profileImageFile.getOriginalFilename();
-        System.out.println("image filename > " + imageFileName);
 
         Path imageFilePath = Paths.get(uploadFolder + imageFileName);
 
@@ -56,7 +55,6 @@ public class UserService {
     public UserProfileDto userProfile(int pageUserId, int principalId){
 
         UserProfileDto userProfileDto = new UserProfileDto();
-
 
         User userEntity = userRepository.findById(pageUserId).orElseThrow(()->{
             throw new CustomException("존재하지 않는 페이지입니다.");
