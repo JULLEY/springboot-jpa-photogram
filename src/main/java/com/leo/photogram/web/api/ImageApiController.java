@@ -26,7 +26,7 @@ public class ImageApiController {
     public ResponseEntity<?> imageStory(@AuthenticationPrincipal PrincipalDetails principalDetails,
                                         @PageableDefault(size = 1) Pageable pageable){
         Page<Image> images = imageService.getImageStory(principalDetails.getUser().getId(), pageable);
-        return new ResponseEntity<>(new CommRespDto<>(1, "성공", images), HttpStatus.OK);
+        return new ResponseEntity<>(new CommRespDto<>(1, "이미지 조회 성공", images), HttpStatus.OK);
     }
 
     @PostMapping("/api/image/{imageId}/likes")
