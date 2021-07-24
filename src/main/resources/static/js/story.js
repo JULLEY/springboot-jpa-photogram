@@ -152,7 +152,7 @@ function addComment() {
 			  <div class="sl__item__contents__comment" id="storyCommentItem-2""> 
 			    <p>
 			      <b>GilDong :</b>
-			      댓글 샘플입니다.
+			      TODO 댓글
 			    </p>
 			    <button><i class="fas fa-times"></i></button>
 			  </div>
