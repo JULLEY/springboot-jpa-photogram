@@ -40,7 +40,11 @@ public class CommentService {
 
     // 댓글 삭제
     @Transactional
-    public void deleteCommnet(){
-
+    public void deleteCommnet(int id){
+        try {
+            commentRepository.deleteById(id);
+        }catch(Exception e){
+            throw new CustomApiException(e.getMessage());
+        }
     }
 }

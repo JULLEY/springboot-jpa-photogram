@@ -7,6 +7,9 @@
 	(5) 댓글삭제
  */
 
+// (0) 현대 로그인한 사용자 아이디
+let principalId = $("#principalId").val();
+
 // (1) 스토리 로드하기
 let page = 0;
 function storyLoad() {
@@ -26,63 +29,66 @@ function storyLoad() {
 
 storyLoad();
 
-function getStoryItem(v) {
+function getStoryItem(image) {
 	let item = `<div class="story-list__item">
-					<div class="sl__item__header">
-						<div>
-							<img class="profile-image" src="/upload/${v.user.profileImageUrl}"
-								onerror="this.src='/images/person.jpeg'" />
-						</div>
-						<div>${v.user.username}</div>
-					</div>
-				
-					<div class="sl__item__img">
-						<img src="/upload/${v.postImageUrl}" />
-					</div>
-				
-					<div class="sl__item__contents">
-						<div class="sl__item__contents__icon">
-				
-							<button>`;
 
-								if(v.likeState){
-									item += `<i class="fas fa-heart active" id="storyLikeIcon-${v.id}" onClick="toggleLike(${v.id})"></i>`;
-								}else{
-									item += `<i class="far fa-heart" id="storyLikeIcon-${v.id}" onclick="toggleLike(${v.id})"></i>`;
-								}
+	<div class="sl__item__header">
+		<div>
+			<img class="profile-image" src="/upload/${image.user.profileImageUrl}"
+				onerror="this.src='/images/person.jpeg'" />
+		</div>
+		<div>${image.user.username}</div>
+	</div>
+	<div class="sl__item__img">
+		<img src="/upload/${image.postImageUrl}" />
+	</div>
+	<div class="sl__item__contents">
+		<div class="sl__item__contents__icon">
+			<button>`;
 
-					item +=`</button>
-						</div>
-				
-						<span class="like"><b id="storyLikeCount-${v.id}">${v.likeCount} </b>likes</span>
-				
-						<div class="sl__item__contents__content">
-							<p>${v.caption}</p>
-						</div>
-				
-						<div id="storyCommentList-${v.id}">`;
+	if(image.likeState){
+		item += `<i class="fas fa-heart active" id="storyLikeIcon-${image.id}" onclick="toggleLike(${image.id})"></i>`;
+	}else{
+		item += `<i class="far fa-heart" id="storyLikeIcon-${image.id}" onclick="toggleLike(${image.id})"></i>`;
+	}
 
-						v.comments.forEach((comment)=>{
-							item += `
-								<div class="sl__item__contents__comment" id="storyCommentItem-${comment.id}"">
-									<p>
-										<b>${comment.user.username} :</b> ${comment.content}
-									</p>
-								<button>
-									<i class="fas fa-times"></i>
-								</button>
-							</div>
-							`;
-						});
 
-					item += `
-						</div>
-						<div class="sl__item__input">
-							<input type="text" placeholder="댓글 달기..." id="storyCommentInput-${v.id}" />
-							<button type="button" onClick="addComment(${v.id})">게시</button>
-						</div>
-					</div>
-				</div>`;
+	item += `
+			</button>
+		</div>
+		<span class="like"><b id="storyLikeCount-${image.id}">${image.likeCount} </b>likes</span>
+		<div class="sl__item__contents__content">
+			<p>${image.caption}</p>
+		</div>
+		<div id="storyCommentList-${image.id}">`;
+
+	image.comments.forEach((comment)=>{
+		item +=`<div class="sl__item__contents__comment" id="storyCommentItem-${comment.id}">
+				<p>
+					<b>${comment.user.username} :</b> ${comment.content}
+				</p>`;
+
+		if(principalId == comment.user.id){
+			item += `	<button onclick="deleteComment(${comment.id})">
+							<i class="fas fa-times"></i>
+						</button>`;
+		}
+
+		item += `	
+			</div>`;
+
+	});
+
+
+	item += `
+			</div>
+			<div class="sl__item__input">
+				<input type="text" placeholder="댓글 달기..." id="storyCommentInput-${image.id}" />
+				<button type="button" onClick="addComment(${image.id})">게시</button>
+			</div>
+		</div>
+	</div>`;
+
 	return item;
 }
 
@@ -169,7 +175,7 @@ function addComment(imageId) {
 			      <b>${comment.user.username} :</b>
 			      ${comment.content}
 			    </p>
-			    <button><i class="fas fa-times"></i></button>
+			    <button onclick="deleteComment(${comment.id})"><i class="fas fa-times"></i></button>
 			  </div>
 		`;
 		commentList.prepend(content);	// append와 반대로 앞쪽에 삽입
@@ -181,8 +187,16 @@ function addComment(imageId) {
 }
 
 // (5) 댓글 삭제
-function deleteComment() {
-
+function deleteComment(commentId) {
+	$.ajax({
+		type: "delete",
+		url: `/api/comment/${commentId}`,
+		dataType: "json"
+	}).done(res=>{
+		$(`#storyCommentItem-${commentId}`).remove();
+	}).fail(error=>{
+		console.log("오류", error);
+	});
 }
 
 
