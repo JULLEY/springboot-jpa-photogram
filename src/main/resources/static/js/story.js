@@ -60,17 +60,23 @@ function getStoryItem(v) {
 							<p>${v.caption}</p>
 						</div>
 				
-						<div id="storyCommentList-${v.id}">
-							<div class="sl__item__contents__comment" id="storyCommentItem-1"">
-								<p>
-									<b>Lovely :</b> 부럽습니다.
-								</p>
+						<div id="storyCommentList-${v.id}">`;
+
+						v.comments.forEach((comment)=>{
+							item += `
+								<div class="sl__item__contents__comment" id="storyCommentItem-${comment.id}"">
+									<p>
+										<b>${comment.user.username} :</b> ${comment.content}
+									</p>
 								<button>
 									<i class="fas fa-times"></i>
 								</button>
 							</div>
+							`;
+						});
+
+					item += `
 						</div>
-				
 						<div class="sl__item__input">
 							<input type="text" placeholder="댓글 달기..." id="storyCommentInput-${v.id}" />
 							<button type="button" onClick="addComment(${v.id})">게시</button>
@@ -140,27 +146,37 @@ function addComment(imageId) {
 	let commentList = $(`#storyCommentList-${imageId}`);
 
 	let data = {
+		imageId:imageId,
 		content: commentInput.val()
 	}
-
-	alert(data.content);
-	return;
 
 	if (data.content === "") {
 		alert("댓글을 작성해주세요!");
 		return;
 	}
 
-	let content = `
-			  <div class="sl__item__contents__comment" id="storyCommentItem-2""> 
+	$.ajax({
+		type:"post",
+		url:`/api/comment`,
+		data:JSON.stringify(data),
+		contentType:"application/json; charset=utf-8",
+		dataType: "json"
+	}).done(res=>{
+		let comment = res.data;
+		let content = `
+			  <div class="sl__item__contents__comment" id="storyCommentItem-${comment.id}"> 
 			    <p>
-			      <b>GilDong :</b>
-			      TODO 댓글
+			      <b>${comment.user.username} :</b>
+			      ${comment.content}
 			    </p>
 			    <button><i class="fas fa-times"></i></button>
 			  </div>
-	`;
-	commentList.prepend(content);
+		`;
+		commentList.prepend(content);	// append와 반대로 앞쪽에 삽입
+	}).fail(error=>{
+		console.log("오류", error);
+	});
+
 	commentInput.val("");
 }
 
