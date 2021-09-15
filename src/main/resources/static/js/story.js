@@ -161,6 +161,7 @@ function addComment(imageId) {
 		return;
 	}
 
+	console.log(data);
 	$.ajax({
 		type:"post",
 		url:`/api/comment`,
@@ -180,7 +181,8 @@ function addComment(imageId) {
 		`;
 		commentList.prepend(content);	// append와 반대로 앞쪽에 삽입
 	}).fail(error=>{
-		console.log("오류", error);
+		console.log("오류", error.responseJSON.data.content);
+		alert(error.responseJSON.data.content);
 	});
 
 	commentInput.val("");
