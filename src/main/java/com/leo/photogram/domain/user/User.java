@@ -21,10 +21,10 @@ import java.util.List;
 public class User {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @GeneratedValue(strategy = GenerationType.IDENTITY) // 번호 증가 전략을 데이터베이스를 따라간다.
     private int id;
 
-    @Column(unique = true)
+    @Column(length = 100, unique = true)    // OAuth2 로그인을위해 100자로 늘림
     private String username;
 
     @Column(nullable = false)

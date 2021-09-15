@@ -1,8 +1,10 @@
 package com.leo.photogram.config.oauth;
 
+import com.leo.photogram.config.auth.PrincipalDetails;
 import com.leo.photogram.domain.user.User;
 import com.leo.photogram.domain.user.UserRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.context.annotation.Bean;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.oauth2.client.userinfo.DefaultOAuth2UserService;
 import org.springframework.security.oauth2.client.userinfo.OAuth2UserRequest;
@@ -19,7 +21,6 @@ import java.util.UUID;
 public class OAuth2DetailsService extends DefaultOAuth2UserService {
 
     private final UserRepository userRepository;
-    private final BCryptPasswordEncoder bCryptPasswordEncoder;
 
     @Override
     public OAuth2User loadUser(OAuth2UserRequest userRequest) throws OAuth2AuthenticationException {
@@ -28,7 +29,7 @@ public class OAuth2DetailsService extends DefaultOAuth2UserService {
 
         Map<String, Object> userInfo = oAuth2User.getAttributes();
         String username = "facebook_" + (String) userInfo.get("id");
-        String password = bCryptPasswordEncoder.encode(UUID.randomUUID().toString());
+        String password = new BCryptPasswordEncoder().encode(UUID.randomUUID().toString());
         String email = (String) userInfo.get("email");
         String name = (String) userInfo.get("name");
 
@@ -40,11 +41,12 @@ public class OAuth2DetailsService extends DefaultOAuth2UserService {
                     .password(password)
                     .email(email)
                     .name(name)
+                    .role("ROLE_USER")
                     .build();
 
-            return new OAuth2UserDetails(userRepository.save(user));
+            return new PrincipalDetails(userRepository.save(user), userInfo);
         }else{
-            return new OAuth2UserDetails(userEntity);
+            return new PrincipalDetails(userEntity, userInfo);
         }
     }
 }
