@@ -52,23 +52,22 @@ public class ImageService {
     private String uploadFolder;
 
     @Transactional
-    public void uploadImage(ImageUploadDto imageUploadDto, PrincipalDetails principalDetails){
-        UUID uuid = UUID.randomUUID();
-        String imageFileName = uuid + "_" + imageUploadDto.getFile().getOriginalFilename();
-        System.out.println("image filename > " + imageFileName);
+    public void uploadImage(ImageUploadDto imageUploadDto, PrincipalDetails principalDetails) {
+        UUID uuid = UUID.randomUUID(); // uuid
+        String imageFileName = uuid+"_"+imageUploadDto.getFile().getOriginalFilename(); // 1.jpg
+        System.out.println("이미지 파일이름 : "+imageFileName);
 
-        Path imageFilePath = Paths.get(uploadFolder + imageFileName);
+        Path imageFilePath = Paths.get(uploadFolder+imageFileName);
 
-        try{
+        // 통신, I/O -> 예외가 발생할 수 있다.
+        try {
             Files.write(imageFilePath, imageUploadDto.getFile().getBytes());
-        }catch (Exception e){
+        } catch (Exception e) {
             e.printStackTrace();
         }
 
         // image 테이블에 저장
-        Image image = imageUploadDto.toEntity(imageFileName, principalDetails.getUser());
-        Image imageEntity = imageRepository.save(image);
-
-        System.out.println(imageEntity);
+        Image image = imageUploadDto.toEntity(imageFileName, principalDetails.getUser()); // 5cf6237d-c404-43e5-836b-e55413ed0e49_bag.jpeg
+        imageRepository.save(image);
     }
 }
