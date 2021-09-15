@@ -62,17 +62,8 @@ public class UserApiController {
             BindingResult bindingResult,
             @AuthenticationPrincipal PrincipalDetails principalDetails){
 
-        if(bindingResult.hasErrors()){
-            Map<String, Object> errorMap = new HashMap<>();
-
-            for(FieldError error : bindingResult.getFieldErrors()){
-                errorMap.put(error.getField(), error.getDefaultMessage());
-            }
-            throw new CustomValidationApiException("유효성 검사 실패", errorMap);
-        }else{
-            User userEntity = userService.updateUserInfo(id, userUpdateDto.toEntity());
-            principalDetails.setUser(userEntity); // 세션 정보 변경
-            return new CommRespDto<>(1, "회원수정완료", userEntity); // 응답시에 userEntity의 모든 getter 함수가 호출되고 JSON으로 파싱하여 응답한다.
-        }
+        User userEntity = userService.updateUserInfo(id, userUpdateDto.toEntity());
+        principalDetails.setUser(userEntity); // 세션 정보 변경
+        return new CommRespDto<>(1, "회원수정완료", userEntity); // 응답시에 userEntity의 모든 getter 함수가 호출되고 JSON으로 파싱하여 응답한다.
     }
 }

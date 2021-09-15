@@ -161,7 +161,6 @@ function addComment(imageId) {
 		return;
 	}
 
-	console.log(data);
 	$.ajax({
 		type:"post",
 		url:`/api/comment`,
