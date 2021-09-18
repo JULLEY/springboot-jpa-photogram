@@ -33,11 +33,6 @@ public class UserApiController {
     private final UserService userService;
     private final SubscribeService subscribeService;
 
-    @PutMapping("/put")
-    public String put(){
-        return "put 요청";
-    }
-
     @PutMapping("/api/user/{principalId}/profileImageUrl")
     public ResponseEntity<?> profileImageUrlUpdate(@PathVariable int principalId, MultipartFile profileImageFile,
                                                    @AuthenticationPrincipal PrincipalDetails principalDetails){
